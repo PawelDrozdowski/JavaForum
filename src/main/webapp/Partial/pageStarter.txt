@@ -1,0 +1,11 @@
+<head>
+    <jsp:include page="PARTIAL/headDefault.html" />
+    <title>JSP page</title>
+</head>
+<body>
+    <jsp:include page="PARTIAL/banner.jsp" />
+    <div class="container body-content">
+       
+        <jsp:include page="PARTIAL/footer.html" />
+    </div>
+</body>
