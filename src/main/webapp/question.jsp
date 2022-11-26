@@ -57,7 +57,7 @@
         <div class="container">
             <form method="POST">
                 <div class="form-horizontal">
-
+                    <input style="display:none" name="questionID" value=<%=request.getParameter("id")%>>
                     <div class="form-group">
                         <div class="col-md-11">
                             <textarea class="form-control input-group col-md-10" id="answer" 

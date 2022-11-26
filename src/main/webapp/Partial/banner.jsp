@@ -14,10 +14,23 @@
                     <a class="nav-link" href="new-question.jsp">New question</a>
                 </li>
             </ul>
+
             <ul class="navbar-nav me-auto">
+                <%
+                    if (request.getSession().getAttribute("user") == null) {
+                %>
                 <li class="nav-item"><a class="nav-link" href="register.jsp" id="registerLink">Register</a></li>
                 <li class="nav-item"><a class="nav-link" href="login.jsp" id="loginLink">Log in</a></li>
+                    <%
+                    } else {
+                    %>
+                <li class="nav-item"><a class="nav-link" href="logout.jsp" id="loginLink">Log out</a></li>
+                    <%
+                        }
+                    %>
             </ul>
+
+
         </div>
     </div>
 </nav>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+    <user>
+        <id>1</id>
+        <email>admin@mail.com</email>
+        <password>202cb962ac59075b964b07152d234b70</password>
+        <nick>Admin</nick>
+    </user>
+</users>
