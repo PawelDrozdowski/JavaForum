@@ -20,30 +20,24 @@
         </form>
 
         <br/>
-
+        <%
+            int postStart = 1;
+            int postEnd = Integer.parseInt(getServletContext().getInitParameter("QuestionsPerPage"));
+            for (int i = postStart; i <= postEnd; i++) {
+        %>
         <div class="card">
             <div class="card-header text-end">
                 <p>Added: 21.11.2022 &emsp; Number of answers: X</p>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Question title</h5>
+                <h5 class="card-title">Question title <%=i%></h5>
                 <p class="card-text">Question content limited to X chars...</p>
-                <a href="question.jsp?id=1" class="btn btn-primary">More</a>
+                <a href="question.jsp?id=<%=i%>" class="btn btn-primary">More</a>
             </div>
         </div>
-        
+
         <br/>
-        
-        <div class="card">
-            <div class="card-header text-end">
-                <p>Added: 22.11.2022 &emsp; Number of answers: X</p>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Question title 2</h5>
-                <p class="card-text">Question content limited to X chars...</p>
-                <a href="question.jsp?id=2" class="btn btn-primary">More</a>
-            </div>
-        </div>
+        <%}%>
 
         <jsp:include page="PARTIAL/footer.html" />
     </div>

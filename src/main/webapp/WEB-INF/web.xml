@@ -5,6 +5,10 @@
             index.jsp
         </welcome-file>
     </welcome-file-list>
+    <context-param>
+        <param-name>QuestionsPerPage</param-name>
+        <param-value>3</param-value>
+    </context-param>
     <session-config>
         <session-timeout>
             30
