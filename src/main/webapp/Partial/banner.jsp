@@ -6,9 +6,13 @@
 
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String icon = response.getHeader("isFirefox").equals("true") ? "🦊" : "👀";
+%>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="/JavaForum">👀 Ask me things - your forum</a>
+        <a class="navbar-brand" href="/JavaForum"><%=icon%> Ask me things - your forum</a>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
