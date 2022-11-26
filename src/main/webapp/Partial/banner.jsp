@@ -8,6 +8,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String icon = response.getHeader("isFirefox").equals("true") ? "🦊" : "👀";
+    ServletContext ctx = getServletContext();
+    String loggedUsers = String.valueOf(ctx.getAttribute("logged"));
+    String activeUsers = String.valueOf(ctx.getAttribute("active"));
 %>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -21,6 +24,7 @@
             </ul>
 
             <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Logged: <%=loggedUsers%> Active: <%=activeUsers%></a></li>
                 <%
                     if (request.getSession().getAttribute("user") == null) {
                 %>
@@ -29,7 +33,7 @@
                     <%
                     } else {
                     %>
-                <li class="nav-item"><a class="nav-link" href="#">Hi <%=((User)request.getSession().getAttribute("user")).nick%></a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Hi <%=((User) request.getSession().getAttribute("user")).nick%></a></li>
                 <li class="nav-item"><a class="nav-link" href="logout.jsp" id="loginLink">Log out</a></li>
                     <%
                         }

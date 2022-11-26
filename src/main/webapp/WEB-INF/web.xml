@@ -9,6 +9,10 @@
         <param-name>QuestionsPerPage</param-name>
         <param-value>3</param-value>
     </context-param>
+    <listener>
+        <description>HttpSessionListener, HttpSessionAttributeListener</description>
+        <listener-class>com.mycompany.javaforum.CountUserListener</listener-class>
+    </listener>
     <session-config>
         <session-timeout>
             30
