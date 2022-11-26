@@ -4,6 +4,7 @@
     Author     : pawel
 --%>
 
+<%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
@@ -24,6 +25,7 @@
                     <%
                     } else {
                     %>
+                <li class="nav-item"><a class="nav-link" href="#">Hi <%=((User)request.getSession().getAttribute("user")).nick%></a></li>
                 <li class="nav-item"><a class="nav-link" href="logout.jsp" id="loginLink">Log out</a></li>
                     <%
                         }
