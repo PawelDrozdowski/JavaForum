@@ -114,9 +114,8 @@ public class AccountFilter implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
             
-            //allow opening question pages(id param in GET)
-            //other actions have at least 2 parameters
-            if (req.getParameterMap().size() > 1 && req.getSession().getAttribute("user") == null) {
+            //allow opening pages with GET
+            if ("POST".equals(req.getMethod()) && req.getSession().getAttribute("user") == null) {
                 res.sendRedirect(req.getContextPath() + "/login.jsp"); // Not logged in, redirect to login page.
             } else {
                 chain.doFilter(request, response);
