@@ -12,7 +12,7 @@
 </head>
 <body>
     <jsp:include page="PARTIAL/banner.jsp" />
-    <div class="container body-content">
+    <div class="container body-content min-vh-100">
         <form method="POST">
             <div class="mb-3 col-6">
                 <label for="email" class="form-label">Title</label>
@@ -27,8 +27,8 @@
             <button type="submit" class="btn btn-primary">Ask</button>
         </form>
         
-
-        <jsp:include page="PARTIAL/footer.html" />
     </div>
+    
+    <jsp:include page="PARTIAL/footer.jsp" />
 </body>
 </html>

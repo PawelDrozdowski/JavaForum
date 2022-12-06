@@ -12,7 +12,7 @@
 </head>
 <body>
     <jsp:include page="PARTIAL/banner.jsp" />
-    <div class="container body-content">    
+    <div class="container body-content min-vh-100">    
 
         <form class="d-flex col-md-8 offset-1" method="GET">
             <button class="btn btn-secondary my-2 my-sm-0" type="submit">🔍</button>
@@ -39,7 +39,7 @@
         <br/>
         <%}%>
 
-        <jsp:include page="PARTIAL/footer.html" />
     </div>
+    <jsp:include page="PARTIAL/footer.jsp" />
 </body>
 </html>

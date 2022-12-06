@@ -12,7 +12,7 @@
 </head>
 <body>
     <jsp:include page="PARTIAL/banner.jsp" />
-    <div class="container body-content">
+    <div class="container body-content min-vh-100">
         <h1>Question title</h1>
         <hr/>
 
@@ -73,7 +73,8 @@
                 </div>
             </form>
         </div>
-        <jsp:include page="PARTIAL/footer.html" />
     </div>
+    
+    <jsp:include page="PARTIAL/footer.jsp" />
 </body>
 </html>

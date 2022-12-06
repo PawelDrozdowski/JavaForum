@@ -14,7 +14,7 @@
     </head>
     <body>
         <jsp:include page="PARTIAL/banner.jsp" />
-        <div class="container body-content">
+        <div class="container body-content min-vh-100">
             <h2>Log in</h2>
             <form method="POST">
                 <%=response.getHeader("loginError")%>
@@ -31,7 +31,8 @@
                 <button type="submit" class="btn btn-primary">Log in</button>
             </form>
 
-            <jsp:include page="PARTIAL/footer.html" />
         </div>
+                
+        <jsp:include page="PARTIAL/footer.jsp" />
     </body>
 </html>

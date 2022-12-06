@@ -63,7 +63,7 @@
     </head>
     <body>
         <jsp:include page="PARTIAL/banner.jsp" />
-        <div class="container body-content">
+        <div class="container body-content min-vh-100">
             <h2>Register</h2>
             <form method="POST">
                 <%=registerError(userAlreadyInDb, validData, emailPOST)%>
@@ -92,8 +92,9 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
 
-            <jsp:include page="PARTIAL/footer.html" />
         </div>
+
+        <jsp:include page="PARTIAL/footer.jsp" />
     </body>
 </html>
 
