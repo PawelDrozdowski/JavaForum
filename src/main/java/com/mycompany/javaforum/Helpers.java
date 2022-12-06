@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -25,7 +27,17 @@ import javax.xml.parsers.DocumentBuilder;
  * @author pawel
  */
 public class Helpers {
-
+    /**
+     * get current date
+     * @return 
+     */
+    public static String getDate(){
+            LocalDate dateObj = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String date = dateObj.format(formatter);
+            
+            return date;
+    }
     /**
      * return hashed string
      *

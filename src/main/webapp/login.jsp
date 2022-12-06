@@ -17,7 +17,7 @@
         <div class="container body-content min-vh-100">
             <h2>Log in</h2>
             <form method="POST">
-                <%=response.getHeader("loginError")%>
+                <%=request.getAttribute("loginError")%>
                 <div class="mb-3 col-6">
                     <label for="email" class="form-label">Email address</label>
                     <input type="email" class="form-control" id="email" name="email">

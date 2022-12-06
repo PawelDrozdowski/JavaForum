@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -112,13 +117,21 @@ public class LoginFilter implements Filter {
         doBeforeProcessing(request, response);
 
         Throwable problem = null;
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpServletRequest req = (HttpServletRequest) request;
+        
+        if ("GET".equals(req.getMethod())) {
+            req.setAttribute("loginError", "");
+            chain.doFilter(request, response);
+            return;
+        }
+
         try {
-            HttpServletResponse res = (HttpServletResponse) response;
-            HttpServletRequest req = (HttpServletRequest) request;
 
             User user = (User) (req.getSession().getAttribute("user"));
             //redirect if already logged in
             if (user != null) {
+                req.setAttribute("loginError", "");
                 res.sendRedirect(req.getContextPath() + "/index.jsp");
                 return;
             }
@@ -126,18 +139,21 @@ public class LoginFilter implements Filter {
             //try to log in
             String emailPOST = request.getParameter("email");
             String passwordPOST = request.getParameter("password");
-            String xmlUrl = req.getServletContext().getRealPath("/TEMP_DATA_SOURCE/users.xml");
-            user = getUser(emailPOST, passwordPOST, xmlUrl);
+
+            //String xmlUrl = req.getServletContext().getRealPath("/TEMP_DATA_SOURCE/users.xml");
+            //user = getUser(emailPOST, passwordPOST, xmlUrl);
+            user = getDbUser(emailPOST, passwordPOST);
 
             if (user != null) {
                 req.getSession().setAttribute("user", user);
                 res.sendRedirect(req.getContextPath() + "/index.jsp");
                 return;
-            }else if(emailPOST != null){
+            } else if (emailPOST != null) {
                 logFailure(req, request);
-                res.setHeader("loginError", "<p>bad login data</p>");
-            }else
-            res.setHeader("loginError", "");
+                req.setAttribute("loginError", "<p>bad login data</p>");
+            } else {
+                req.setAttribute("loginError", "");
+            }
 
             chain.doFilter(request, response);
         } catch (Throwable t) {
@@ -192,6 +208,34 @@ public class LoginFilter implements Filter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    private User getDbUser(String email, String passwordPOST)
+            throws SQLException, NoSuchAlgorithmException, ClassNotFoundException {
+        //establish connection
+        Connection con = DbConnection.initializeDatabase();
+
+        //prepare statement
+        PreparedStatement st = con.prepareStatement("SELECT id,email,password,nick FROM users WHERE email = ? AND password = ?");
+
+        st.setString(1, email);
+        st.setString(2, Helpers.hash(passwordPOST));
+
+        //execute statement
+        ResultSet rs = st.executeQuery();
+
+        if (rs.isBeforeFirst()) {
+            rs.first();
+            int id = Integer.parseInt(rs.getString("id"));
+            return new User(id,
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("nick"));
+        }
+        // Close all connections
+        st.close();
+        con.close();
         return null;
     }
 
