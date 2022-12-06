@@ -8,13 +8,14 @@
 <!DOCTYPE html>
 <head>
     <jsp:include page="PARTIAL/headDefault.html" />
-    <title>JSP Page</title>
+    <title>Ask me things</title>
 </head>
 <body>
     <jsp:include page="PARTIAL/banner.jsp" />
     <div class="container body-content min-vh-100 d-flex">    
         <!--Left block-->
-        <div class="col-md-2 pt-lg-5">  
+        <div class="col-md-2 pt-4">  
+            <h5 class="text-center">New questions:</h5>
             <div class="sticky-top mt-2" style="top:2vh">
             <%
                 int newPostStart = 1;

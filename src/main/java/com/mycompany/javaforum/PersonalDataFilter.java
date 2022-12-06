@@ -22,23 +22,23 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author pawel
  */
-@WebFilter(filterName = "AccountFilter", urlPatterns = {"/question.jsp", "/new-question.jsp"})
-public class AccountFilter implements Filter {
-
+@WebFilter(filterName = "PersonalDataFilter", urlPatterns = {"/my-account.jsp","/my-questions.jsp","/my-answers.jsp"})
+public class PersonalDataFilter implements Filter {
+    
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-
-    public AccountFilter() {
-    }
-
+    
+    public PersonalDataFilter() {
+    }    
+    
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("AccountFilter:DoBeforeProcessing");
+            log("PersonalDataFilter:DoBeforeProcessing");
         }
 
         // Write code here to process the request and/or response before
@@ -61,12 +61,12 @@ public class AccountFilter implements Filter {
 	    log(buf.toString());
 	}
          */
-    }
-
+    }    
+    
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("AccountFilter:DoAfterProcessing");
+            log("PersonalDataFilter:DoAfterProcessing");
         }
 
         // Write code here to process the request and/or response after
@@ -100,20 +100,20 @@ public class AccountFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-
+        
         if (debug) {
-            log("AccountFilter:doFilter()");
+            log("PersonalDataFilter:doFilter()");
         }
-
+        
         doBeforeProcessing(request, response);
-
+        
         Throwable problem = null;
-        try {
+                try {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
             
-            //allow opening pages with GET
-            if ("POST".equals(req.getMethod()) && req.getSession().getAttribute("user") == null) {
+            //redirect if not logged in
+            if (req.getSession().getAttribute("user") == null) {
                 res.sendRedirect(req.getContextPath() + "/login.jsp"); // Not logged in, redirect to login page.
             } else {
                 chain.doFilter(request, response);
@@ -125,7 +125,7 @@ public class AccountFilter implements Filter {
             problem = t;
             t.printStackTrace();
         }
-
+        
         doAfterProcessing(request, response);
 
         // If there was a problem, we want to rethrow it if it is
@@ -140,8 +140,6 @@ public class AccountFilter implements Filter {
             sendProcessingError(problem, response);
         }
     }
-
-
 
     /**
      * Return the filter configuration object for this filter.
@@ -162,17 +160,17 @@ public class AccountFilter implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {
+    public void destroy() {        
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {
+    public void init(FilterConfig filterConfig) {        
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {
-                log("AccountFilter:Initializing filter");
+            if (debug) {                
+                log("PersonalDataFilter:Initializing filter");
             }
         }
     }
@@ -183,27 +181,27 @@ public class AccountFilter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("AccountFilter()");
+            return ("PersonalDataFilter()");
         }
-        StringBuffer sb = new StringBuffer("AccountFilter(");
+        StringBuffer sb = new StringBuffer("PersonalDataFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
     }
-
+    
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);
-
+        String stackTrace = getStackTrace(t);        
+        
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);
+                PrintWriter pw = new PrintWriter(ps);                
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
-                pw.print(stackTrace);
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
+                pw.print(stackTrace);                
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -220,7 +218,7 @@ public class AccountFilter implements Filter {
             }
         }
     }
-
+    
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -234,9 +232,9 @@ public class AccountFilter implements Filter {
         }
         return stackTrace;
     }
-
+    
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);
+        filterConfig.getServletContext().log(msg);        
     }
-
+    
 }
