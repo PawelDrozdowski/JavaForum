@@ -24,6 +24,7 @@
             </ul>
 
             <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Questions: X Answers: X</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Logged: <%=loggedUsers%> Active: <%=activeUsers%></a></li>
                 <%
                     if (request.getSession().getAttribute("user") == null) {
