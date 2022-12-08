@@ -9,16 +9,59 @@ package com.mycompany.javaforum;
  * @author pawel
  */
 public class User {
+
     public static int firstFreeID = 2;
-    public int id;
+    public String id;
     public String email;
     public String password;
     public String nick;
 
-    public User(int id, String email, String password, String nick) {
+    public User(String id, String email, String password, String nick) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nick = nick;
     }
+
+// <editor-fold defaultstate="collapsed" desc="get/set">
+    public static int getFirstFreeID() {
+        return firstFreeID;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public static void setFirstFreeID(int firstFreeID) {
+        User.firstFreeID = firstFreeID;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+    // </editor-fold>
 }

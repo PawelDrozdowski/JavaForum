@@ -4,7 +4,7 @@
     Author     : pawel
 --%>
 
-<%@page import="com.mycompany.javaforum.DbUsers"%>
+<%@page import="Db.DbUsers"%>
 <%@page import="com.mycompany.javaforum.Helpers"%>
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

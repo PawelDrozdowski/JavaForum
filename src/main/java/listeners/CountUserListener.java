@@ -25,7 +25,7 @@ public class CountUserListener implements HttpSessionListener, HttpSessionAttrib
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        se.getSession().setMaxInactiveInterval(5); // in seconds
+        se.getSession().setMaxInactiveInterval(120); // in seconds
         active++;
         ctx = se.getSession().getServletContext();
         synchronized (ctx) {

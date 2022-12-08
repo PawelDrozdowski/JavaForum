@@ -4,7 +4,34 @@
     Author     : pawel
 --%>
 
+<%@page import="Db.DbAnswers"%>
+<%@page import="com.mycompany.javaforum.User"%>
+<%@page import="Db.DbQuestions"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String errorMessage = "";
+    if (request.getMethod().equals("POST")) {
+        //read POST
+        String questionId = request.getParameter("questionId");
+        String userId = request.getParameter("userId");
+        String contentPOST = request.getParameter("content");
+
+        //validate input
+        boolean validData = contentPOST != null && contentPOST.length() > 4;
+
+        //insert if valid
+        if (validData) {
+            if (DbAnswers.insertAnswer(questionId, userId, contentPOST)) {
+                response.sendRedirect(request.getContextPath() + "/question.jsp?id=" + questionId);
+                return;
+            } else {
+                errorMessage = "Internal server error";
+            }
+        }
+        else
+            errorMessage = "Invalid data";
+    }
+%>
 <!DOCTYPE html>
 <head>
     <jsp:include page="PARTIAL/headDefault.html" />
@@ -56,12 +83,14 @@
 
         <div class="container">
             <form method="POST">
+                <%=errorMessage%>
                 <div class="form-horizontal">
-                    <input style="display:none" name="questionID" value=<%=request.getParameter("id")%>>
+                    <input style="display:none" name="questionId" value=<%=request.getParameter("id")%>>
+                    <input type="hidden" name="userId" value="<%=((User)request.getSession().getAttribute("user")).id%>"/>
                     <div class="form-group">
                         <div class="col-md-11">
-                            <textarea class="form-control input-group col-md-10" id="answer" 
-                                      name="answer" cols="40" rows="5" placeholder="Write your answer"></textarea>
+                            <textarea class="form-control input-group col-md-10" id="content" 
+                                      name="content" cols="40" rows="5" placeholder="Write your answer"></textarea>
                         </div>
                     </div>
                     <br/>

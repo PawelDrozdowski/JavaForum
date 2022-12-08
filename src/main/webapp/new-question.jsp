@@ -4,7 +4,37 @@
     Author     : pawel
 --%>
 
+<%@page import="com.mycompany.javaforum.User"%>
+<%@page import="com.mycompany.javaforum.Question"%>
+<%@page import="Db.DbQuestions"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    String errorMessage = "";
+    if (request.getMethod().equals("POST")) {
+        //read POST
+        String userId = request.getParameter("userId");
+        String titlePOST = request.getParameter("title");
+        String contentPOST = request.getParameter("content");
+
+        //validate input
+        boolean validData = titlePOST != null && contentPOST != null 
+            && titlePOST.length() > 4 && contentPOST.length() > 4;
+
+        //insert if valid
+        if (validData) {
+            if (DbQuestions.insertQuestion(userId, titlePOST, contentPOST)) {
+                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                return;
+            } else {
+                errorMessage = "Internal server error";
+            }
+        }
+        else
+            errorMessage = "Invalid data";
+    }
+%>
+
 <!DOCTYPE html>
 <head>
     <jsp:include page="PARTIAL/headDefault.html" />
@@ -13,7 +43,12 @@
 <body>
     <jsp:include page="PARTIAL/banner.jsp" />
     <div class="container body-content min-vh-100">
+        <h2>New Question</h2>
         <form method="POST">
+            <%=errorMessage%>
+            
+            <input type="hidden" name="userId" value="<%=((User)request.getSession().getAttribute("user")).id%>"/>
+            
             <div class="mb-3 col-6">
                 <label for="email" class="form-label">Title</label>
                 <input type="text"class="form-control" id="title" name="title"/>
@@ -21,14 +56,14 @@
 
             <div class="mb-3 col-6">
                 <label for="content" class="form-label">Content</label>
-                <textarea class="form-control input-group col-md-10" id="content" name="answer" cols="40" rows="5"></textarea>
+                <textarea class="form-control input-group col-md-10" id="content" name="content" cols="40" rows="5"></textarea>
             </div>
 
             <button type="submit" class="btn btn-primary">Ask</button>
         </form>
-        
+
     </div>
-    
+
     <jsp:include page="PARTIAL/footer.jsp" />
 </body>
 </html>

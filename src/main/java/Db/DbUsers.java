@@ -104,8 +104,7 @@ public class DbUsers {
     private static User getFromResultSet(ResultSet rs) throws SQLException {
         if (rs.isBeforeFirst()) {
             rs.first();
-            int id = Integer.parseInt(rs.getString("id"));
-            return new User(id,
+            return new User(rs.getString("id"),
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getString("nick"));
