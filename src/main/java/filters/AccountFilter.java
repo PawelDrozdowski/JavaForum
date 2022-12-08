@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Filter.java to edit this template
  */
-package com.mycompany.javaforum;
+package filters;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -22,23 +22,23 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author pawel
  */
-@WebFilter(filterName = "PersonalDataFilter", urlPatterns = {"/my-account.jsp","/my-questions.jsp","/my-answers.jsp"})
-public class PersonalDataFilter implements Filter {
-    
+@WebFilter(filterName = "AccountFilter", urlPatterns = {"/question.jsp", "/new-question.jsp"})
+public class AccountFilter implements Filter {
+
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
-    public PersonalDataFilter() {
-    }    
-    
+
+    public AccountFilter() {
+    }
+
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("PersonalDataFilter:DoBeforeProcessing");
+            log("AccountFilter:DoBeforeProcessing");
         }
 
         // Write code here to process the request and/or response before
@@ -61,12 +61,12 @@ public class PersonalDataFilter implements Filter {
 	    log(buf.toString());
 	}
          */
-    }    
-    
+    }
+
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("PersonalDataFilter:DoAfterProcessing");
+            log("AccountFilter:DoAfterProcessing");
         }
 
         // Write code here to process the request and/or response after
@@ -100,20 +100,20 @@ public class PersonalDataFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-        
+
         if (debug) {
-            log("PersonalDataFilter:doFilter()");
+            log("AccountFilter:doFilter()");
         }
-        
+
         doBeforeProcessing(request, response);
-        
+
         Throwable problem = null;
-                try {
+        try {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
             
-            //redirect if not logged in
-            if (req.getSession().getAttribute("user") == null) {
+            //allow opening pages with GET
+            if ("POST".equals(req.getMethod()) && req.getSession().getAttribute("user") == null) {
                 res.sendRedirect(req.getContextPath() + "/login.jsp"); // Not logged in, redirect to login page.
             } else {
                 chain.doFilter(request, response);
@@ -125,7 +125,7 @@ public class PersonalDataFilter implements Filter {
             problem = t;
             t.printStackTrace();
         }
-        
+
         doAfterProcessing(request, response);
 
         // If there was a problem, we want to rethrow it if it is
@@ -140,6 +140,8 @@ public class PersonalDataFilter implements Filter {
             sendProcessingError(problem, response);
         }
     }
+
+
 
     /**
      * Return the filter configuration object for this filter.
@@ -160,17 +162,17 @@ public class PersonalDataFilter implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
-                log("PersonalDataFilter:Initializing filter");
+            if (debug) {
+                log("AccountFilter:Initializing filter");
             }
         }
     }
@@ -181,27 +183,27 @@ public class PersonalDataFilter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("PersonalDataFilter()");
+            return ("AccountFilter()");
         }
-        StringBuffer sb = new StringBuffer("PersonalDataFilter(");
+        StringBuffer sb = new StringBuffer("AccountFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
+        String stackTrace = getStackTrace(t);
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -218,7 +220,7 @@ public class PersonalDataFilter implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -232,9 +234,9 @@ public class PersonalDataFilter implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
-    
+
 }
