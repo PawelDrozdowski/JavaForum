@@ -9,11 +9,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -23,9 +18,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -121,7 +113,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         
         if ("GET".equals(req.getMethod())) {
-            req.setAttribute("loginError", "");
+            req.setAttribute("loginError", " ");
             chain.doFilter(request, response);
             return;
         }
@@ -142,7 +134,7 @@ public class LoginFilter implements Filter {
 
             //String xmlUrl = req.getServletContext().getRealPath("/TEMP_DATA_SOURCE/users.xml");
             //user = getUser(emailPOST, passwordPOST, xmlUrl);
-            user = getDbUser(emailPOST, passwordPOST);
+            user = DbUsers.getDbUser(emailPOST, Helpers.hash(passwordPOST));
 
             if (user != null) {
                 req.getSession().setAttribute("user", user);
@@ -184,59 +176,6 @@ public class LoginFilter implements Filter {
         FileWriter writer = new FileWriter(path, true);
         writer.write(request.getRemoteAddr() + "\n");
         writer.close();
-    }
-
-    private User getUser(String email, String passwordPOST, String xmlUrl) {
-        if ("".equals(email) || "".equals(passwordPOST)) {
-            return null;
-        }
-        try {
-            String passwordHash = Helpers.hash(passwordPOST);
-            String xPathExp = "/users/user[email='" + email + "'][password='" + passwordHash + "']";
-            NodeList nodeList = Helpers.getNodeList(xmlUrl, xPathExp);
-
-            Node node = nodeList.item(0);
-            if (node != null) {
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) node;
-                    int id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent());
-                    String password = eElement.getElementsByTagName("password").item(0).getTextContent();
-                    String nick = eElement.getElementsByTagName("nick").item(0).getTextContent();
-                    return new User(id, email, password, nick);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private User getDbUser(String email, String passwordPOST)
-            throws SQLException, NoSuchAlgorithmException, ClassNotFoundException {
-        //establish connection
-        Connection con = DbConnection.initializeDatabase();
-
-        //prepare statement
-        PreparedStatement st = con.prepareStatement("SELECT id,email,password,nick FROM users WHERE email = ? AND password = ?");
-
-        st.setString(1, email);
-        st.setString(2, Helpers.hash(passwordPOST));
-
-        //execute statement
-        ResultSet rs = st.executeQuery();
-
-        if (rs.isBeforeFirst()) {
-            rs.first();
-            int id = Integer.parseInt(rs.getString("id"));
-            return new User(id,
-                    rs.getString("email"),
-                    rs.getString("password"),
-                    rs.getString("nick"));
-        }
-        // Close all connections
-        st.close();
-        con.close();
-        return null;
     }
 
     /**
