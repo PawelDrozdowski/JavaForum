@@ -4,7 +4,21 @@
     Author     : pawel
 --%>
 
+<%@page import="java.util.LinkedList"%>
+<%@page import="com.mycompany.javaforum.Question"%>
+<%@page import="Db.DbQuestions"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%
+    String limit = getServletContext().getInitParameter("NewQuestionsAmount");
+    LinkedList<Question> newQuestionsList = DbQuestions.getDbQuestionList("ORDER BY id DESC", limit);
+    int contentLimit = Integer.parseInt(getServletContext().getInitParameter("QuestionContentPreviewLength"));
+    request.setAttribute("contentLimit",contentLimit);
+    request.setAttribute("newQuestionsList",newQuestionsList);
+%>
+
 <!DOCTYPE html>
 <head>
     <jsp:include page="PARTIAL/headDefault.html" />
@@ -17,27 +31,25 @@
         <div class="col-md-2 pt-4">  
             <h5 class="text-center">New questions:</h5>
             <div class="sticky-top mt-2" style="top:2vh">
-            <%
-                int newPostStart = 1;
-                int newPostEnd = Integer.parseInt(getServletContext().getInitParameter("NewQuestionsAmount"));
-                for (int i = newPostStart; i <= newPostEnd; i++) {
-            %>
-            <div class="pb-3">
-                <div class="card small">
-                    <div class="card-header text-end p-4">
-                        <p class="m-0">21.11.2022</p>   
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-title">Question title <%=i%></h6>
-                        <p class="card-text">Question content limited to X chars...</p>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <a href="question.jsp?id=<%=i%>" class="btn btn-primary">More</a>
-                        </div>
+                <c:forEach items="${newQuestionsList}" var="q">
+                    <div class="pb-3">
+                        <div class="card small">
+                            <div class="card-header text-end p-4">
+                                <p class="m-0">${q.date}</p>   
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">${q.title}</h6>
+                                <p class="card-text">
+                                    ${contentLimit > q.content.length() ? q.content : q.content.substring(0,contentLimit)}
+                                </p>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a href="question.jsp?id=${q.id}" class="btn btn-primary">More</a>
+                                </div>
 
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <%}%>
+                </c:forEach>
             </div>
         </div>
         <!--Left block-->
