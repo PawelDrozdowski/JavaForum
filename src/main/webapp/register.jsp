@@ -5,15 +5,6 @@
 --%>
 
 <%@page import="com.mycompany.javaforum.DbUsers"%>
-<<<<<<< HEAD
-=======
-<%@page import="javax.xml.transform.stream.StreamResult"%>
-<%@page import="javax.xml.transform.Transformer"%>
-<%@page import="javax.xml.transform.TransformerFactory"%>
-<%@page import="javax.xml.transform.dom.DOMSource"%>
-<%@page import="org.w3c.dom.Element"%>
-<%@page import="org.w3c.dom.Document"%>
->>>>>>> master
 <%@page import="com.mycompany.javaforum.Helpers"%>
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
