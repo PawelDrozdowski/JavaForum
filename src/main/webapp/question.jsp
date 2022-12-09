@@ -4,11 +4,26 @@
     Author     : pawel
 --%>
 
+<%@page import="com.mycompany.javaforum.Answer"%>
+<%@page import="java.util.LinkedList"%>
+<%@page import="com.mycompany.javaforum.Question"%>
 <%@page import="Db.DbAnswers"%>
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page import="Db.DbQuestions"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <%
+    //load question
+    Question question = DbQuestions.getDbQuestion(request.getParameter("id"));
+    LinkedList<Answer> answers = DbAnswers.getDbAnswersList(request.getParameter("id"));
+    question.setAnswers(answers);
+    request.setAttribute("question", question);
+%>  
+<%
+    //insert answer from POST
     String errorMessage = "";
     if (request.getMethod().equals("POST")) {
         //read POST
@@ -27,56 +42,50 @@
             } else {
                 errorMessage = "Internal server error";
             }
-        }
-        else
+        } else {
             errorMessage = "Invalid data";
+        }
     }
 %>
 <!DOCTYPE html>
 <head>
     <jsp:include page="PARTIAL/headDefault.html" />
-    <title>Question</title>
+    <title>${question.title}</title>
 </head>
 <body>
     <jsp:include page="PARTIAL/banner.jsp" />
     <div class="container body-content min-vh-100">
-        <h1>Question title</h1>
+        <h1>${question.title}</h1>
         <hr/>
 
         <div class="card mb-3">
             <div class="card-header text-end">
-                <p>User123 (21.11.2022)</p>
+                <p>${question.questionAuthor.nick} (${question.date})</p>
             </div>
             <div class="card-body">
                 <p class="col-md-9 text-justify" style="white-space:pre-line;">
-                    Hello! We provides artistic and thematic video editions and we mix it with our selection of music, some of this músic is edited by us, and other we transform it by fair use, we use mash up with audio programs for made it, adding it some crazy video edit with vídeo editor programs, and thougth all this we express:  audiovisual art, Aesthetic, Trippy and Vaporwave vibes.
-                    We want you to have an experience close to the "nirvana" with each of our videos.
-
-                    ¨"You use a glass mirror to see your face; you use works of art to see your soul.” -George Bernard Shaw
+                    ${question.content}
                 </p>
             </div>
         </div>
 
         <h2>Answers</h2>
         <hr/>
-
-        <div class="card mb-4">
-            <div class="card-header text-end">
-                <p>555User555 (22.11.2022)</p>
+        
+        <c:if test = "${question.answers == null || question.answers.size() == 0}">
+            <h5 class="pb-3">There are no answers yet. Help ${question.questionAuthor.nick}!</h5>
+        </c:if>
+            
+        <c:forEach items="${question.answers}" var="a">
+            <div class="card mb-4">
+                <div class="card-header text-end">
+                    <p>${a.answerAuthor.nick} (${a.date})</p>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">${a.content}</p>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="card-text">Have the same.</p>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header text-end">
-                <p>111User111 (22.11.2022)</p>
-            </div>
-            <div class="card-body">
-                <p class="card-text">Try XYZ.</p>
-            </div>
-        </div>
+        </c:forEach>
 
         <h2>Answer</h2>
         <hr/>
@@ -86,7 +95,7 @@
                 <%=errorMessage%>
                 <div class="form-horizontal">
                     <input style="display:none" name="questionId" value=<%=request.getParameter("id")%>>
-                    <input type="hidden" name="userId" value="<%=((User)request.getSession().getAttribute("user")).id%>"/>
+                    <input type="hidden" name="userId" value="<%=((User) request.getSession().getAttribute("user")).id%>"/>
                     <div class="form-group">
                         <div class="col-md-11">
                             <textarea class="form-control input-group col-md-10" id="content" 
@@ -103,7 +112,7 @@
             </form>
         </div>
     </div>
-    
+
     <jsp:include page="PARTIAL/footer.jsp" />
 </body>
 </html>

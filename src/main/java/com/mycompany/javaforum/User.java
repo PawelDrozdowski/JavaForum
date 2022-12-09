@@ -10,7 +10,6 @@ package com.mycompany.javaforum;
  */
 public class User {
 
-    public static int firstFreeID = 2;
     public String id;
     public String email;
     public String password;
@@ -24,9 +23,6 @@ public class User {
     }
 
 // <editor-fold defaultstate="collapsed" desc="get/set">
-    public static int getFirstFreeID() {
-        return firstFreeID;
-    }
 
     public String getId() {
         return id;
@@ -42,10 +38,6 @@ public class User {
 
     public String getNick() {
         return nick;
-    }
-
-    public static void setFirstFreeID(int firstFreeID) {
-        User.firstFreeID = firstFreeID;
     }
 
     public void setId(String id) {

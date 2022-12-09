@@ -4,32 +4,38 @@
  */
 package com.mycompany.javaforum;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author pawel
  */
 public class Question {
 
-    int id;
-    int userId;
+    String id;
+    String userId;
     String title;
     String content;
     String date;
+    User questionAuthor;
+    LinkedList<Answer> answers;
 
-    public Question(int id, int userId, String title, String content, String date) {
+    public Question(String id, String userId, String title, String content, String date, User questionAuthor, LinkedList<Answer> answers) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.content = content;
         this.date = date;
+        this.questionAuthor = questionAuthor;
+        this.answers = answers;
     }
     
     // <editor-fold defaultstate="collapsed" desc="get/set">
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -45,11 +51,27 @@ public class Question {
         this.date = date;
     }
 
-    public int getId() {
+    public void setQuestionAuthor(User questionAuthor) {
+        this.questionAuthor = questionAuthor;
+    }
+
+    public void setAnswers(LinkedList<Answer> answers) {
+        this.answers = answers;
+    }
+
+    public User getQuestionAuthor() {
+        return questionAuthor;
+    }
+
+    public LinkedList<Answer> getAnswers() {
+        return answers;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 

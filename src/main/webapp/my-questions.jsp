@@ -4,7 +4,22 @@
     Author     : pawel
 --%>
 
+<%@page import="com.mycompany.javaforum.User"%>
+<%@page import="Db.DbQuestions"%>
+<%@page import="java.util.LinkedList"%>
+<%@page import="com.mycompany.javaforum.Question"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%
+    String clauses = "WHERE questions.userid = " + ((User) request.getSession().getAttribute("user")).id + " ORDER BY qId DESC";
+    LinkedList<Question> questionsList = DbQuestions.getDbQuestionList(clauses, "9999");
+    int contentLimit = Integer.parseInt(getServletContext().getInitParameter("QuestionContentPreviewLength"));
+    request.setAttribute("contentLimit", contentLimit);
+    request.setAttribute("questionsList", questionsList);
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,25 +35,23 @@
                 <input class="form-control me-sm-2 col-md-6 offset-1" type="text" id="search" name="search" placeholder="Search">
             </form>
 
-            <%
-                int postStart = 1;
-                int postEnd = Integer.parseInt(getServletContext().getInitParameter("QuestionsPerPage"));
-                for (int i = postStart; i <= postEnd; i++) {
-            %>
-            <div class="pb-3">
-                <div class="card">
-                    <div class="card-header text-end">
-                        <p>Added: 21.11.2022 &emsp; Number of answers: X</p>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Question title <%=i%></h5>
-                        <p class="card-text">Question content limited to X chars...</p>
-                        <a href="question.jsp?id=<%=i%>" class="btn btn-primary">More</a>
+            <c:forEach items="${questionsList}" var="q">
+                <div class="pb-3">
+                    <div class="card">
+                        <div class="card-header text-end p-4">
+                            <p class="m-0">${q.date} &emsp; Number of answers: X</p>   
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${q.title}</h5>
+                            <p class="card-text">
+                                ${q.content}
+                            </p>
+                            <a href="question.jsp?id=${q.id}" class="btn btn-primary">More</a>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <%}%>
+            </c:forEach>
 
         </div>
         <jsp:include page="PARTIAL/footer.jsp" />

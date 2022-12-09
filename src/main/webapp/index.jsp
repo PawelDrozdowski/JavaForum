@@ -12,11 +12,14 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
-    String limit = getServletContext().getInitParameter("NewQuestionsAmount");
-    LinkedList<Question> newQuestionsList = DbQuestions.getDbQuestionList("ORDER BY id DESC", limit);
+    String neQuestionsLimit = getServletContext().getInitParameter("NewQuestionsAmount");
+    String questionsLimit = getServletContext().getInitParameter("QuestionsPerPage");
+    LinkedList<Question> newQuestionsList = DbQuestions.getDbQuestionList("ORDER BY qId DESC", neQuestionsLimit);
+    LinkedList<Question> questionsList = DbQuestions.getDbQuestionList("ORDER BY qId DESC", questionsLimit);
     int contentLimit = Integer.parseInt(getServletContext().getInitParameter("QuestionContentPreviewLength"));
-    request.setAttribute("contentLimit",contentLimit);
-    request.setAttribute("newQuestionsList",newQuestionsList);
+    request.setAttribute("contentLimit", contentLimit);
+    request.setAttribute("newQuestionsList", newQuestionsList);
+    request.setAttribute("questionsList", questionsList);
 %>
 
 <!DOCTYPE html>
@@ -39,7 +42,7 @@
                             </div>
                             <div class="card-body">
                                 <h6 class="card-title">${q.title}</h6>
-                                <p class="card-text">
+                                <p class="card-text">                                  
                                     ${contentLimit > q.content.length() ? q.content : q.content.substring(0,contentLimit)}
                                 </p>
                                 <div class="d-flex justify-content-center align-items-center">
@@ -61,25 +64,24 @@
                 <input class="form-control me-sm-2 col-md-6 offset-1" type="text" id="search" name="search" placeholder="Search">
             </form>
 
-            <%
-                int postStart = 1;
-                int postEnd = Integer.parseInt(getServletContext().getInitParameter("QuestionsPerPage"));
-                for (int i = postStart; i <= postEnd; i++) {
-            %>
-            <div class="pb-3">
-                <div class="card">
-                    <div class="card-header text-end">
-                        <p>Added: 21.11.2022 &emsp; Number of answers: X</p>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Question title <%=i%></h5>
-                        <p class="card-text">Question content limited to X chars...</p>
-                        <a href="question.jsp?id=<%=i%>" class="btn btn-primary">More</a>
+            <c:forEach items="${questionsList}" var="q">
+                <div class="pb-3">
+                    <div class="card">
+                        <div class="card-header text-end p-4">
+                            <p class="m-0">${q.date} &emsp; Number of answers: X</p>   
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${q.title}</h5>
+                            <p class="card-text">
+                                ${q.content}
+                            </p>
+                            <a href="question.jsp?id=${q.id}" class="btn btn-primary">More</a>
+
+                        </div>
                     </div>
                 </div>
-            </div>
+            </c:forEach>
 
-            <%}%>
         </div>
         <!--Right block-->
 

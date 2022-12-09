@@ -5,6 +5,7 @@
 package Db;
 
 import com.mycompany.javaforum.Question;
+import com.mycompany.javaforum.User;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +25,11 @@ public class DbQuestions {
         Connection con = DbConnection.initializeDatabase();
 
         //prepare statement
-        PreparedStatement st = con.prepareStatement("SELECT id, userId, title, content, date FROM questions WHERE id = ?");
+        PreparedStatement st = con.prepareStatement
+        ("SELECT questions.id as qId, userId, title, content, date, users.nick "
+                + "FROM questions "
+                + "LEFT JOIN USERS on users.id = questions.userId "
+                + "WHERE questions.id = ?");
 
         st.setString(1, id);
 
@@ -55,9 +60,12 @@ public class DbQuestions {
         Connection con = DbConnection.initializeDatabase();
 
         //prepare statement
-        PreparedStatement st = con.prepareStatement("SELECT * FROM questions " + filterClauses +" LIMIT " + amount);
+        PreparedStatement st = con.prepareStatement("SELECT questions.id as qId, userId, title, content, date, users.nick "
+                + "FROM questions "
+                + "LEFT JOIN USERS on users.id = questions.userId " 
+                + filterClauses 
+                + " LIMIT " + amount);
         
-        //System.out.println(st.toString());
 
         //execute statement
         ResultSet rs = st.executeQuery();
@@ -103,12 +111,13 @@ public class DbQuestions {
     }
 
     private static Question buildQuestionFromResult(ResultSet rs) throws NumberFormatException, SQLException {
-        int id = Integer.parseInt(rs.getString("id"));
-        int userId = Integer.parseInt(rs.getString("userId"));
-        return new Question(id,
-                userId,
+        User author = new User(rs.getString("userId"),"","",rs.getString("nick"));
+        return new Question(rs.getString("qid"),
+                rs.getString("userId"),
                 rs.getString("title"),
                 rs.getString("content"),
-                rs.getString("date"));
+                rs.getString("date"),
+                author,
+                null);
     }
 }

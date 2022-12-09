@@ -15,13 +15,15 @@ public class Answer {
     String userId;
     String content;
     String date;
+    User answerAuthor;
 
-    public Answer(String id, String questionId, String userId, String content, String date) {
+    public Answer(String id, String questionId, String userId, String content, String date, User answerAuthor) {
         this.id = id;
         this.questionId = questionId;
         this.userId = userId;
         this.content = content;
         this.date = date;
+        this.answerAuthor = answerAuthor;
     }
 
     // <editor-fold defaultstate="collapsed" desc="get/set">
@@ -43,6 +45,14 @@ public class Answer {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setAnswerAuthor(User answerAuthor) {
+        this.answerAuthor = answerAuthor;
+    }
+
+    public User getAnswerAuthor() {
+        return answerAuthor;
     }
 
     public String getId() {
