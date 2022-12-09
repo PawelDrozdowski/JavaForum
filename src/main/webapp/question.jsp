@@ -18,8 +18,6 @@
 <%
     //load question
     Question question = DbQuestions.getDbQuestion(request.getParameter("id"));
-    LinkedList<Answer> answers = DbAnswers.getDbAnswersList(request.getParameter("id"));
-    question.setAnswers(answers);
     request.setAttribute("question", question);
 %>  
 <%
@@ -82,7 +80,9 @@
                     <p>${a.answerAuthor.nick} (${a.date})</p>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">${a.content}</p>
+                    <p class="card-text" style="white-space:pre-line;">
+                        ${a.content}
+                    </p>
                 </div>
             </div>
         </c:forEach>

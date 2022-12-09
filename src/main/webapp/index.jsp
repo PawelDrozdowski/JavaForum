@@ -14,9 +14,11 @@
 <%
     String neQuestionsLimit = getServletContext().getInitParameter("NewQuestionsAmount");
     String questionsLimit = getServletContext().getInitParameter("QuestionsPerPage");
-    LinkedList<Question> newQuestionsList = DbQuestions.getDbQuestionList("ORDER BY qId DESC", neQuestionsLimit);
-    LinkedList<Question> questionsList = DbQuestions.getDbQuestionList("ORDER BY qId DESC", questionsLimit);
     int contentLimit = Integer.parseInt(getServletContext().getInitParameter("QuestionContentPreviewLength"));
+    
+    LinkedList<Question> newQuestionsList = DbQuestions.getDbQuestionList("","ORDER BY qId DESC", neQuestionsLimit);
+    LinkedList<Question> questionsList = DbQuestions.getDbQuestionList("","ORDER BY qId DESC", questionsLimit);
+
     request.setAttribute("contentLimit", contentLimit);
     request.setAttribute("newQuestionsList", newQuestionsList);
     request.setAttribute("questionsList", questionsList);
@@ -68,7 +70,7 @@
                 <div class="pb-3">
                     <div class="card">
                         <div class="card-header text-end p-4">
-                            <p class="m-0">${q.date} &emsp; Number of answers: X</p>   
+                            <p class="m-0">${q.date} &emsp; Number of answers: ${q.answers.size()}</p>   
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">${q.title}</h5>

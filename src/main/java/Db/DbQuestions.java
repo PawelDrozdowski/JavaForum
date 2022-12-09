@@ -4,6 +4,7 @@
  */
 package Db;
 
+import com.mycompany.javaforum.Answer;
 import com.mycompany.javaforum.Question;
 import com.mycompany.javaforum.User;
 import java.security.NoSuchAlgorithmException;
@@ -46,27 +47,30 @@ public class DbQuestions {
     /**
      * return list of questions
      *
-     * @param filterClauses leave empty to not filter
+     * @param where leave empty to not filter
+     * @param orderBy leave empty to not sort
      * @param amount limit list size
      * @return
      * @throws SQLException
      * @throws NoSuchAlgorithmException
      * @throws ClassNotFoundException
      */
-    public static LinkedList<Question> getDbQuestionList(String filterClauses, String amount)
+    public static LinkedList<Question> getDbQuestionList(String where, String orderBy, String amount)
             throws SQLException, NoSuchAlgorithmException, ClassNotFoundException {
         LinkedList<Question> output = new LinkedList<>();
         //establish connection
         Connection con = DbConnection.initializeDatabase();
 
         //prepare statement
-        PreparedStatement st = con.prepareStatement("SELECT questions.id as qId, userId, title, content, date, users.nick "
+        PreparedStatement st = 
+                con.prepareStatement(
+                "SELECT questions.id as qId, questions.userId, title, questions.content, questions.date, users.nick "
                 + "FROM questions "
-                + "LEFT JOIN USERS on users.id = questions.userId " 
-                + filterClauses 
+                + "LEFT JOIN USERS on users.id = questions.userId "
+                + where 
+                + " "
+                + orderBy
                 + " LIMIT " + amount);
-        
-
         //execute statement
         ResultSet rs = st.executeQuery();
         
@@ -102,7 +106,8 @@ public class DbQuestions {
         return true;
     }
 
-    private static Question getFromResultSet(ResultSet rs) throws SQLException {
+    private static Question getFromResultSet(ResultSet rs) 
+            throws SQLException, NumberFormatException, NoSuchAlgorithmException, ClassNotFoundException {
         if (rs.isBeforeFirst()) {
             rs.first();
             return buildQuestionFromResult(rs);
@@ -110,14 +115,18 @@ public class DbQuestions {
         return null;
     }
 
-    private static Question buildQuestionFromResult(ResultSet rs) throws NumberFormatException, SQLException {
+    private static Question buildQuestionFromResult(ResultSet rs) 
+            throws NumberFormatException, SQLException, NoSuchAlgorithmException, ClassNotFoundException {
+        
         User author = new User(rs.getString("userId"),"","",rs.getString("nick"));
+        LinkedList<Answer> answers = DbAnswers.getDbAnswersList(rs.getString("qid"));
+        
         return new Question(rs.getString("qid"),
                 rs.getString("userId"),
                 rs.getString("title"),
                 rs.getString("content"),
                 rs.getString("date"),
                 author,
-                null);
+                answers);
     }
 }

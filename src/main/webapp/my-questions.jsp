@@ -13,8 +13,9 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
-    String clauses = "WHERE questions.userid = " + ((User) request.getSession().getAttribute("user")).id + " ORDER BY qId DESC";
-    LinkedList<Question> questionsList = DbQuestions.getDbQuestionList(clauses, "9999");
+    String where = "WHERE questions.userid = " + ((User) request.getSession().getAttribute("user")).id;
+    String orderBy = "ORDER BY qId DESC";
+    LinkedList<Question> questionsList = DbQuestions.getDbQuestionList(where, orderBy, "9999");
     int contentLimit = Integer.parseInt(getServletContext().getInitParameter("QuestionContentPreviewLength"));
     request.setAttribute("contentLimit", contentLimit);
     request.setAttribute("questionsList", questionsList);
@@ -39,7 +40,7 @@
                 <div class="pb-3">
                     <div class="card">
                         <div class="card-header text-end p-4">
-                            <p class="m-0">${q.date} &emsp; Number of answers: X</p>   
+                            <p class="m-0">${q.date} &emsp; Number of answers: ${q.answers.size()}</p>   
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">${q.title}</h5>
