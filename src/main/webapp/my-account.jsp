@@ -6,7 +6,7 @@
 
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<% User user = (User)request.getSession().getAttribute("user"); %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,8 +19,8 @@
 
             <div class="card mb-3">
                 <div class="card-header">
-                    <p><%=user.nick%></p>
-                    <p><%=user.email%></p>
+                    <p>${user.nick}</p>
+                    <p>${user.email}</p>
                 </div>
                 <div class="card-body">
                     <p class="col-md-9 text-justify" style="white-space:pre-line;">

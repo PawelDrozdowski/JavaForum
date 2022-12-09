@@ -112,7 +112,7 @@ public class BrowserFilter implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             HttpServletRequest req = (HttpServletRequest) request;
             boolean isFirefox = req.getHeader("User-Agent").contains("Firefox");
-            res.setHeader("isFirefox", String.valueOf(isFirefox));
+            req.setAttribute("isFirefox", isFirefox);
             chain.doFilter(request, response);
         } catch (Throwable t) {
             // If an exception is thrown somewhere down the filter chain,

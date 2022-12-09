@@ -7,7 +7,7 @@
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    String icon = response.getHeader("isFirefox").equals("true") ? "🦊" : "👀";
+    String icon = (boolean)request.getAttribute("isFirefox") ? "🦊" : "👀";
     ServletContext ctx = getServletContext();
     String loggedUsers = String.valueOf(ctx.getAttribute("logged"));
     String activeUsers = String.valueOf(ctx.getAttribute("active"));
