@@ -4,6 +4,8 @@
     Author     : pawel
 --%>
 
+<%@page import="Db.DbAnswers"%>
+<%@page import="Db.DbQuestions"%>
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
@@ -11,6 +13,9 @@
     ServletContext ctx = getServletContext();
     String loggedUsers = String.valueOf(ctx.getAttribute("logged"));
     String activeUsers = String.valueOf(ctx.getAttribute("active"));
+    
+    String totalQuestions = DbQuestions.getQuestionsAmount();
+    String totalAnswers = DbAnswers.getAnswersAmount();
 %>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -24,7 +29,7 @@
             </ul>
 
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Questions: X Answers: X</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Questions: <%=totalQuestions%> Answers: <%=totalAnswers%></a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Logged: <%=loggedUsers%> Active: <%=activeUsers%></a></li>
                 <%
                     if (request.getSession().getAttribute("user") == null) {

@@ -19,6 +19,27 @@ import java.util.LinkedList;
  * @author pawel
  */
 public class DbQuestions {
+    
+    public static String getQuestionsAmount() 
+            throws SQLException, ClassNotFoundException{
+        //establish connection
+        Connection con = DbConnection.initializeDatabase();
+
+        //prepare statement
+        PreparedStatement st = con.prepareStatement("SELECT COUNT(id) as amount FROM questions");
+
+        //execute statement
+        ResultSet rs = st.executeQuery();
+        if (rs.isBeforeFirst())
+            rs.first();
+        
+        String output = rs.getString("amount");
+        
+        // Close all connections
+        st.close();
+        con.close();
+        return output;
+    }
 
     public static Question getDbQuestion(String id)
             throws SQLException, NoSuchAlgorithmException, ClassNotFoundException {

@@ -5,7 +5,6 @@
 package Db;
 
 import com.mycompany.javaforum.Answer;
-import com.mycompany.javaforum.Question;
 import com.mycompany.javaforum.User;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -19,7 +18,28 @@ import java.util.LinkedList;
  * @author pawel
  */
 public class DbAnswers {
+    
+    public static String getAnswersAmount() 
+            throws SQLException, ClassNotFoundException{
+        //establish connection
+        Connection con = DbConnection.initializeDatabase();
 
+        //prepare statement
+        PreparedStatement st = con.prepareStatement("SELECT COUNT(id) as amount FROM answers");
+
+        //execute statement
+        ResultSet rs = st.executeQuery();
+        if (rs.isBeforeFirst())
+            rs.first();
+
+        String output = rs.getString("amount");
+        
+        // Close all connections
+        st.close();
+        con.close();
+        return output;
+    }
+    
     public static Answer getDbAnswer(String id)
             throws SQLException, NoSuchAlgorithmException, ClassNotFoundException {
         //establish connection
