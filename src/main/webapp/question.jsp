@@ -14,6 +14,7 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix = "ex" uri = "WEB-INF/custom.tld"%>
 
 <%
     //load question
@@ -76,8 +77,11 @@
             
         <c:forEach items="${question.answers}" var="a">
             <div class="card mb-4">
-                <div class="card-header text-end">
-                    <p>${a.answerAuthor.nick} (${a.date})</p>
+                <div class="card-header">
+                    <div class="container d-flex p-0">
+                        <span class="col-md-6"><ex:rating value="4"/></span>
+                        <span class="col-md-6 text-end">${a.answerAuthor.nick} (${a.date})</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     <p class="card-text" style="white-space:pre-line;">
