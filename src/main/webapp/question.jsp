@@ -10,6 +10,7 @@
 <%@page import="Db.DbAnswers"%>
 <%@page import="com.mycompany.javaforum.User"%>
 <%@page import="Db.DbQuestions"%>
+<%@page import="Db.DbRatings"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -24,7 +25,7 @@
 <%
     //insert answer from POST
     String errorMessage = "";
-    if (request.getMethod().equals("POST")) {
+    if (request.getMethod().equals("POST") && request.getParameter("rate") == null) {
         //read POST
         String questionId = request.getParameter("questionId");
         String userId = request.getParameter("userId");
@@ -44,6 +45,18 @@
         } else {
             errorMessage = "Invalid data";
         }
+    }
+%>
+<%
+    //insert rate from POST
+    if (request.getMethod().equals("POST") && request.getParameter("content") == null) {
+        //read POST
+        String answerId = request.getParameter("answerId");
+        String rate = request.getParameter("rate");
+        String userId = request.getParameter("userId");
+
+        if(!DbRatings.hasUserRated(answerId,userId))
+            DbRatings.insertRating(answerId, userId, rate);
     }
 %>
 <!DOCTYPE html>
@@ -70,17 +83,27 @@
 
         <h2>Answers</h2>
         <hr/>
-        
+
         <c:if test = "${question.answers == null || question.answers.size() == 0}">
             <h5 class="pb-3">There are no answers yet. Help ${question.questionAuthor.nick}!</h5>
         </c:if>
-            
+
         <c:forEach items="${question.answers}" var="a">
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="container d-flex p-0">
-                        <span class="col-md-6"><ex:rating value="4"/></span>
-                        <span class="col-md-6 text-end">${a.answerAuthor.nick} (${a.date})</span>
+                        <form method="post" class="col-md-2 d-flex flex-row">
+                            <button type="submit" class="btn btn-primary col-md-5">Rate</button>
+                            <select class="form-select-sm col-md-4" name="rate">
+                                <c:forEach var = "i" begin = "1" end = "10">
+                                    <option value="${i}">${i}★</option>
+                                </c:forEach>
+                            </select>
+                            <input type="hidden" name="answerId" value="${a.id}"/>
+                            <input type="hidden" name="userId" value="<%=((User) request.getSession().getAttribute("user")).id%>"/>
+                        </form>
+                        <span class="col-md-5 display-6"><ex:rating value="${DbRatings.getAnswerAvgRating(a.id)}"/></span>
+                        <span class="col-md-5 text-end">${a.answerAuthor.nick} (${a.date})</span>
                     </div>
                 </div>
                 <div class="card-body">

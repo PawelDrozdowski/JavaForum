@@ -5,7 +5,6 @@
 package tags;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -19,15 +18,21 @@ public class rating extends SimpleTagSupport {
     private int value;
 
     public void setValue(String val) {
-        this.value = Integer.parseInt(val);
+        this.value = (int)Double.parseDouble(val);
     }
 
     public void doTag() throws JspException, IOException {
         JspWriter out = getJspContext().getOut();
-        String output = "";
+        String output = "<span class='text-primary'>";
         for (int i = 0; i < value; i++) {
-            output += "⭐";
+            output += "★";
         }
+        output += "</span><span class='text-dark'>";
+        int blackStars = 10 - value;
+        for (int i = 0; i < blackStars; i++) {
+            output += "★";
+        }
+        output+="</span>";
         out.println(output);
 
     }
